@@ -35,6 +35,7 @@ def explain_image_content(cnn_result, ocr_result, face_sentiment_result):
     - Facial emotion detected: {face_sentiment_result}
 
     Based on these details, describe what is happening in the image.
+    Decide whether it is good or bad content for the user. Explain why and say whether they should consume it.
     """
 
     model = genai.GenerativeModel('gemini-1.5-pro-latest')
