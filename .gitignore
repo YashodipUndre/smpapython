@@ -1,4 +1,3 @@
-
 # -------------------------------------
 # Python
 # -------------------------------------
@@ -6,16 +5,13 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
-*.pyc
-*.pyo
 
 # Virtual Environments
 .env/
 .venv/
 env/
 venv/
-yash/
-.yash/
+yashodip/
 
 # Django / Flask / FastAPI
 db.sqlite3
@@ -23,7 +19,7 @@ media/
 staticfiles/
 *.log
 
-# Migrations (optional, if you don’t want to track them)
+# Migrations (optional)
 # */migrations/*
 # !*/migrations/__init__.py
 
@@ -49,11 +45,8 @@ build/
 # -------------------------------------
 # OS-specific
 # -------------------------------------
-# Windows
 Thumbs.db
 Desktop.ini
-
-# macOS
 .DS_Store
 
 # -------------------------------------
