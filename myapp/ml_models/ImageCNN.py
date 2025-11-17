@@ -15,10 +15,20 @@ transform = transforms.Compose([
                          std=[0.229, 0.224, 0.225]),
 ])
 
-def classify_image(image_path):
-    image = Image.open(image_path).convert('RGB')
+def classify_image(image_file):
+    # Read image bytes from uploaded file
+    image = Image.open(image_file).convert('RGB')
+
+    # Apply preprocessing transform (same as before)
     input_tensor = transform(image).unsqueeze(0)
+
+    # Run the model
     output = model(input_tensor)
+
+    # Get predicted class index
     _, predicted = output.max(1)
+
+    # Get class names
     class_names = models.EfficientNet_B7_Weights.DEFAULT.meta['categories']
+
     return class_names[predicted.item()]

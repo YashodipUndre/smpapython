@@ -57,11 +57,12 @@ def explain_image_content(cnn_result, ocr_result, face_sentiment_result):
 def image_classification_view(request): 
     if request.method == 'POST' and request.FILES.get('image'):
         image = request.FILES['image']
-        path = default_storage.save(image.name, image)
 
-        resultcnn = classify_image(path)
-        resultocr = ocrText(path) or {}  # prevent None crash
-        resultsentimentFace = detect_face_sentiment(path)
+        resultcnn = classify_image(image)
+        image.seek(0)
+        resultocr = ocrText(image) or {}
+        image.seek(0)  # prevent None crash
+        resultsentimentFace = detect_face_sentiment(image)
 
         gemini_summary = explain_image_content(
             resultcnn,

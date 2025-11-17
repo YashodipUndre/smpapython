@@ -8,11 +8,16 @@ pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tessera
 # Load the emotion classifier once (you can also move this outside the function if needed)
 emotion_classifier = pipeline("text-classification", model="j-hartmann/emotion-english-distilroberta-base", return_all_scores=True)
 
-def ocrText(image):
-    # Extract text from image
+from PIL import Image
+
+def ocrText(image_file):
+    # Convert uploaded file → Pillow image
+    image = Image.open(image_file)
+
+    # Extract text using OCR
     text = pytesseract.image_to_string(image)
 
-    # Analyze emotion
+    # Run emotion classifier on extracted text
     results = emotion_classifier(text)[0]
     results = sorted(results, key=lambda x: x['score'], reverse=True)
 
@@ -20,5 +25,4 @@ def ocrText(image):
         'text': text,
         'emotions': results
     }
-
 
