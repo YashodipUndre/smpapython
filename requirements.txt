@@ -132,7 +132,7 @@ python-dateutil==2.9.0.post0
 python-dotenv==1.1.0
 python-json-logger==3.3.0
 pytz==2025.2
-pywinpty==2.0.15
+
 PyYAML==6.0.2
 pyzmq==26.4.0
 referencing==0.36.2
@@ -161,8 +161,8 @@ terminado==0.18.1
 tf_keras==2.19.0
 tinycss2==1.4.0
 tokenizers==0.21.1
-torch==2.5.1+cpu
-torchvision==0.20.1+cpu
+torch==2.5.1
+torchvision==0.20.1
 tornado==6.4.2
 tqdm==4.67.1
 traitlets==5.14.3
