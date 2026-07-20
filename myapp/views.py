@@ -82,7 +82,7 @@ def image_classification_view(request):
             """
 
             # Use Gemini Flash which has native vision capabilities
-            vision_model = genai.GenerativeModel("gemini-1.5-flash")
+            vision_model = genai.GenerativeModel("gemini-2.5-flash")
             
             # Format the image part for Gemini
             image_part = {
