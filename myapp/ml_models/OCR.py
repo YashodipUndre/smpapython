@@ -14,15 +14,22 @@ def ocrText(image_file):
     # Convert uploaded file → Pillow image
     image = Image.open(image_file)
 
-    # Extract text using OCR
-    text = pytesseract.image_to_string(image)
+    try:
+        # Extract text using OCR
+        text = pytesseract.image_to_string(image)
 
-    # Run emotion classifier on extracted text
-    results = emotion_classifier(text)[0]
-    results = sorted(results, key=lambda x: x['score'], reverse=True)
+        # Run emotion classifier on extracted text
+        results = emotion_classifier(text)[0]
+        results = sorted(results, key=lambda x: x['score'], reverse=True)
 
-    return {
-        'text': text,
-        'emotions': results
-    }
+        return {
+            'text': text,
+            'emotions': results
+        }
+    except pytesseract.pytesseract.TesseractNotFoundError:
+        print("Tesseract OCR not found. Bypassing OCR...")
+        return {
+            'text': "No text detected (Tesseract OCR not installed)",
+            'emotions': []
+        }
 

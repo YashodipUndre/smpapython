@@ -28,11 +28,6 @@ api_key = os.getenv("GOOGLE_API_KEY")
 # Configure your API key
 genai.configure(api_key=api_key)
 
-models = genai.list_models()
-
-for m in models:
-    print(m.name)
-
 # Create a function to talk to Gemini
 def explain_image_content(cnn_result, ocr_result, face_sentiment_result):
     prompt = f"""
@@ -47,7 +42,7 @@ def explain_image_content(cnn_result, ocr_result, face_sentiment_result):
     Decide whether it is good or bad content for the user. Explain why and say whether they should consume it.
     """
 
-    model = genai.GenerativeModel("gemini-2.5-flash")
+    model = genai.GenerativeModel("gemini-3-flash-preview")
     response = model.generate_content(prompt)  # ← FIXED (removed list)
     return response.text
 
