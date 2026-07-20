@@ -28,7 +28,15 @@ api_key = os.getenv("GOOGLE_API_KEY")
 # Configure your API key
 genai.configure(api_key=api_key)
 
-# Create a function to talk to Gemini
+# Create a function to talk to Gemini with automatic model fallback
+GEMINI_MODELS = [
+    "gemini-3.1-flash-lite",
+    "gemini-3.5-flash",
+    "gemini-3-flash-preview",
+    "gemini-2.5-flash-lite",
+    "gemini-2.5-flash",
+]
+
 def explain_image_content(cnn_result, ocr_result, face_sentiment_result):
     prompt = f"""
     An image has been analyzed with the following results:
@@ -42,9 +50,17 @@ def explain_image_content(cnn_result, ocr_result, face_sentiment_result):
     Decide whether it is good or bad content for the user. Explain why and say whether they should consume it.
     """
 
-    model = genai.GenerativeModel("gemini-3-flash-preview")
-    response = model.generate_content(prompt)  # ← FIXED (removed list)
-    return response.text
+    for model_name in GEMINI_MODELS:
+        try:
+            model = genai.GenerativeModel(model_name)
+            response = model.generate_content(prompt)
+            logging.info(f"Successfully used model: {model_name}")
+            return response.text
+        except Exception as e:
+            logging.warning(f"Model {model_name} failed: {e}")
+            continue
+
+    return "All AI models are currently at their daily limit. Please try again tomorrow."
 
 @csrf_exempt
 @api_view(['POST'])
