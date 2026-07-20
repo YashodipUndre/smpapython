@@ -16,17 +16,5 @@ opencv-python-headless==4.11.0.86
 pillow==11.0.0
 numpy==2.1.2
 
-# ML - ImageCNN (torch + torchvision for EfficientNet)
-torch==2.5.1
-torchvision==0.20.1
-
-# ML - Sentiment (DeepFace for facial emotion detection)
-deepface==0.0.93
-tensorflow==2.19.0
-tf_keras==2.19.0
-
-# ML - OCR text emotion classification (transformers + pipeline)
-transformers==4.51.3
-
 # OCR (optional - will gracefully skip if Tesseract not installed)
 pytesseract==0.3.13

@@ -9,9 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import default_storage
 from django.http import JsonResponse
 import os
-from .ml_models.ImageCNN import classify_image  # assuming your CNN is here
-from .ml_models.OCR import ocrText
-from .ml_models.sentiment import detect_face_sentiment
+
 from django.core.files.storage import default_storage
 from rest_framework.decorators import parser_classes
 from rest_framework.parsers import MultiPartParser
@@ -67,24 +65,40 @@ def explain_image_content(cnn_result, ocr_result, face_sentiment_result):
 @parser_classes([MultiPartParser])
 def image_classification_view(request): 
     if request.method == 'POST' and request.FILES.get('image'):
-        image = request.FILES['image']
+        try:
+            image_file = request.FILES['image']
+            
+            # Read image into memory for Gemini
+            image_data = image_file.read()
+            
+            prompt = """
+            Please analyze this image comprehensively and provide a summary for a social media manager.
+            
+            1. What objects, scenes, or text do you see in the image?
+            2. If there are people, what emotions or sentiments are their faces conveying?
+            3. If there is text, what is the sentiment of the text?
+            4. Based on these details, describe what is happening in the image.
+            5. Decide whether it is good or bad content for business growth. Explain why and say whether they should use it for social media.
+            """
 
-        resultcnn = classify_image(image)
-        image.seek(0)
-        resultocr = ocrText(image) or {}
-        image.seek(0)  # prevent None crash
-        resultsentimentFace = detect_face_sentiment(image)
-
-        gemini_summary = explain_image_content(
-            resultcnn,
-            resultocr,
-            resultsentimentFace
-        )
-       
-
-        return JsonResponse({ 
-            'gemini_summary': gemini_summary
-        })
+            # Use Gemini Flash which has native vision capabilities
+            vision_model = genai.GenerativeModel("gemini-1.5-flash")
+            
+            # Format the image part for Gemini
+            image_part = {
+                "mime_type": image_file.content_type,
+                "data": image_data
+            }
+            
+            response = vision_model.generate_content([prompt, image_part])
+            
+            return JsonResponse({ 
+                'gemini_summary': response.text
+            })
+            
+        except Exception as e:
+            logging.error(f"Vision API Failed: {e}")
+            return JsonResponse({'error': 'Failed to process image with AI. Please try again.'}, status=500)
 
     return JsonResponse({'error': 'No image uploaded'}, status=400)
 
